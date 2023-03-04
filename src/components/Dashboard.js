@@ -1,8 +1,8 @@
-import React, {useContext} from "react";
-import { ClientContext } from "../App";
+import React from "react";
+import Client from "../oauth2/Client";
 
 function Dashboard() {
-  const client = useContext(ClientContext);
+  const client = new Client();
   const name = client.storage.getItem("name");
 
   return (

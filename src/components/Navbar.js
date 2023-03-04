@@ -1,9 +1,9 @@
-import React, {useContext} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ClientContext } from "../App";
+import Client from "../oauth2/Client";
 
 function Navbar() {
-  const client = useContext(ClientContext);
+  const client = new Client();
 
   if (client.isAuthenticated()) {
     return (

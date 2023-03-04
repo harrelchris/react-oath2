@@ -1,4 +1,4 @@
-import React, {createContext} from "react";
+import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import Client from "./oauth2/Client";
@@ -14,23 +14,18 @@ import Navbar from "./components/Navbar";
 import NotFound from "./components/NotFound";
 import Dashboard from "./components/Dashboard";
 
-const client = new Client();
-const provider = new EveOnline();
-
-export const ClientContext = createContext(client);
-export const ProviderContext = createContext(provider);
-
 function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 function App() {
+  const client = new Client();
   const query = useQuery();
 
   return (
     <>
-      <Navbar client={client} />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="*" element={<NotFound />} />

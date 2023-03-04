@@ -1,10 +1,11 @@
-import React, {useContext, useEffect} from "react";
+import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {ClientContext, ProviderContext} from "../../App";
+import Client from "../../oauth2/Client";
+import EveOnline from "../../oauth2/providers/EveOnline";
 
 function Login() {
-  const client = useContext(ClientContext);
-  const provider = useContext(ProviderContext);
+  const client = new Client();
+  const provider = new EveOnline();
   const navigate = useNavigate();
 
   useEffect(() => {

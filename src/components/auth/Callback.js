@@ -1,9 +1,9 @@
-import React, {useContext, useEffect} from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import {ClientContext} from "../../App";
+import Client from "../../oauth2/Client";
 
 function Callback({code, state}) {
-  const client = useContext(ClientContext);
+  const client = new Client();
   const navigate = useNavigate();
 
   useEffect(() => {
