@@ -4,8 +4,6 @@ class EveOnline {
   authorizationEndpoint = "https://login.eveonline.com/v2/oauth/authorize/";
   tokenEndpoint = "https://login.eveonline.com/v2/oauth/token";
 
-  constructor() {}
-
   authorize() {
     const state = uuid();
     const queryParams = {
@@ -18,6 +16,38 @@ class EveOnline {
     const queryString = new URLSearchParams(queryParams).toString();
     const authorizationURL = `${this.authorizationEndpoint}?${queryString}`
     return [authorizationURL, state];
+  }
+
+  async token(code) {
+    const authorization = window.btoa(`${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_SECRET_KEY}`);
+    const payload = {
+      grant_type: "authorization_code",
+      code: code
+    };
+    const body = new URLSearchParams(payload).toString();
+    const response = await fetch(this.tokenEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": `Basic ${authorization}`,
+      },
+      body: body
+    });
+    const jwt = await response.json();
+    return this.#parseJWT(jwt)
+  }
+
+  #parseJWT(jwt) {
+    const [, b64Payload,] = jwt["access_token"].split(".");
+    const payloadString = window.atob(b64Payload);
+    const payload = JSON.parse(payloadString);
+    return {
+      accessToken: jwt["access_token"],
+      refreshToken: jwt["refresh_token"],
+      expiresAt: payload["exp"],
+      name: payload["name"],
+      id: payload["sub"].split(":")[2]
+    };
   }
 }
 
