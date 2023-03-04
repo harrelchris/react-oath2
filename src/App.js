@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import Authorize from "./components/auth/Authorize";
 import Callback from "./components/auth/Callback";
@@ -12,6 +12,13 @@ import NotFound from "./components/NotFound";
 import Dashboard from "./components/Dashboard";
 
 function App() {
+  function useQuery() {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  let query = useQuery();
+
   return (
     <>
       <Navbar />
@@ -20,7 +27,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
         <Route path="/auth/authorize" element={<Authorize />} />
-        <Route path="/auth/callback" element={<Callback />} />
+        <Route path="/auth/callback" element={<Callback code={query.get("code")} state={query.get("state")} />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/logout" element={<Logout />} />
 
