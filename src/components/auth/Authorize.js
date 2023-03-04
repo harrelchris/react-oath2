@@ -1,6 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
+import {ClientContext, ProviderContext} from "../../App";
 
-function Authorize({client, provider}) {
+function Authorize() {
+  const client = useContext(ClientContext);
+  const provider = useContext(ProviderContext);
   const [authorizationURL, state] = provider.authorize();
 
   useEffect(() => {

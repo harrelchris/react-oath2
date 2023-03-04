@@ -1,4 +1,4 @@
-import React from "react";
+import React, {createContext} from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import Client from "./oauth2/Client";
@@ -14,34 +14,19 @@ import Navbar from "./components/Navbar";
 import NotFound from "./components/NotFound";
 import Dashboard from "./components/Dashboard";
 
+const client = new Client();
+const provider = new EveOnline();
+
+export const ClientContext = createContext(client);
+export const ProviderContext = createContext(provider);
+
 function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
 function App() {
-  const client = new Client();
-  const provider = new EveOnline();
   const query = useQuery();
-
-  function getRoutes() {
-    if (client.isAuthenticated()) {
-      return (
-        <>
-          <Route path="/auth/logout" element={<Logout client={client} />} />
-          <Route path="/dashboard" element={<Dashboard client={client} />} />
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Route path="/auth/authorize" element={<Authorize client={client} provider={provider} />} />
-          <Route path="/auth/callback" element={<Callback client={client} code={query.get("code")} state={query.get("state")} />} />
-          <Route path="/auth/login" element={<Login client={client} provider={provider} />} />
-        </>
-      );
-    }
-  }
 
   return (
     <>
@@ -49,7 +34,18 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="*" element={<NotFound />} />
-        {getRoutes()}
+
+        {client.isAuthenticated()
+          ? (<>
+            <Route path="/auth/logout" element={<Logout />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </>)
+          : (<>
+            <Route path="/auth/authorize" element={<Authorize />} />
+            <Route path="/auth/callback" element={<Callback code={query.get("code")} state={query.get("state")} />} />
+            <Route path="/auth/login" element={<Login />} />
+          </>)
+        }
       </Routes>
     </>
   );

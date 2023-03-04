@@ -1,7 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import {ClientContext, ProviderContext} from "../../App";
 
-function Login({client, provider}) {
+function Login() {
+  const client = useContext(ClientContext);
+  const provider = useContext(ProviderContext);
   const navigate = useNavigate();
 
   useEffect(() => {
