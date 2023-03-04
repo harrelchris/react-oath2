@@ -19,11 +19,23 @@ class EveOnline {
   }
 
   async token(code) {
-    const authorization = window.btoa(`${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_SECRET_KEY}`);
     const payload = {
       grant_type: "authorization_code",
       code: code
     };
+    return await this.#requestToken(payload);
+  }
+
+  async refresh(refreshToken) {
+    const payload = {
+      grant_type: "refresh_token",
+      refresh_token: refreshToken
+    };
+    return await this.#requestToken(payload);
+  }
+
+  async #requestToken(payload) {
+    const authorization = window.btoa(`${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_SECRET_KEY}`);
     const body = new URLSearchParams(payload).toString();
     const response = await fetch(this.tokenEndpoint, {
       method: "POST",
