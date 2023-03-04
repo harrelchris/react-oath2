@@ -29,7 +29,7 @@ function App() {
       return (
         <>
           <Route path="/auth/logout" element={<Logout client={client} />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard client={client} />} />
         </>
       );
     } else {
