@@ -5,6 +5,7 @@ function Navbar() {
   return (
     <>
       <Link to="/">Home</Link>
+      <Link to="/auth/authorize">Authorize</Link>
     </>
   );
 }
