@@ -1,23 +1,22 @@
-import React, {useEffect} from "react";
-import Client from "../../oauth2/Client";
-import EveOnline from "../../oauth2/providers/EveOnline";
+import React, { useEffect } from "react";
+import { v4 as uuid } from "uuid";
 
 function Authorize() {
-  const client = new Client();
-  const provider = new EveOnline();
-  const [authorizationURL, state] = provider.authorize();
-
   useEffect(() => {
-    client.storage.setItem("state", state);
-    window.location.href = authorizationURL;
+    const state = uuid();
+    const queryParams = {
+      response_type: "code",
+      redirect_uri: process.env.REACT_APP_CALLBACK_URL,
+      client_id: process.env.REACT_APP_CLIENT_ID,
+      scope: process.env.REACT_APP_SCOPE,
+      state: state
+    };
+    const queryString = new URLSearchParams(queryParams).toString();
+    localStorage.setItem("state", state);
+    window.location.href = "https://login.eveonline.com/v2/oauth/authorize/?" + queryString;
   }, []);
 
-  return (
-    <>
-      <h1>Authorize</h1>
-      <p>Redirecting to authorization endpoint.</p>
-    </>
-  );
+  return <h1>Redirecting...</h1>;
 }
 
 export default Authorize;
